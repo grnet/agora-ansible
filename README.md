@@ -2,7 +2,7 @@
 
 ## Preparatory steps
 
-- Configure ansible variable in files/vars.yml
+- Configure ansible variables in files/vars.yml
 - Add files/saml-encrypt.crt and files/saml-encrypt.key
 - Add files/saml-sign.crt and files/saml-sign.key
 - Add files/server.crt and files/server.key
