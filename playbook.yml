@@ -1,0 +1,43 @@
+---
+- hosts: agora-prod
+  vars_files:
+    - files/vars.yml
+  tasks:
+    - name: Add nodejs user
+      user: name={{ agora_user }} state=present
+    - name: Clones the Agora repository
+      git: repo={{ agora_repo }} dest={{ agora_home }}
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+      notify:
+        - restart agora
+    - name: Allow node to bind to privileged ports
+      command: /sbin/setcap 'cap_net_bind_service=+ep' /usr/bin/nodejs
+    - name: Install Agora upstart script
+      template: src=templates/agora.conf.tpl dest=/etc/init/agora.conf
+    - name: Deploy agora local configuration
+      template: src=templates/local.json.tpl dest={{ agora_home }}/backend/config/local.json
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+      notify: 
+        - restart agora
+    - name: Install certificates for https
+      copy: src={{ item }} dest={{ agora_home }}/backend/config/ssl/ owner={{ agora_user }} mode=0600
+      with_fileglob:
+        - files/server*
+        - files/saml*
+    - name: Fix hardcoded configuration for discojuice
+      replace: "dest={{ agora_home }}/public/login/login-controller.js regexp='https://127.0.0.1:8081' replace='{{ agora_base_url }}'"
+    - name: Create logs directory
+      file: "path={{ agora_home }}/backend/logs state=directory"
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+    - name: Install Node dependencies
+      command: npm install chdir={{ agora_home }}
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+    - name: Start Agora cap_net_bind_service
+      service: name=agora state=started
+  handlers:
+    - name: restart agora
+      service: name=agora state=restarted
