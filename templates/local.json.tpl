@@ -25,7 +25,7 @@
       "decryptionPvkName": "ssl/saml-encrypt.key",
       "publicCertName": "ssl/saml-sign.crt",
       "privateCertName": "ssl/saml-sign.key",
-      "disableRequestedAuthnContext": {{ agora_requested_authn_context }},
+      "disableRequestedAuthnContext": "{{ agora_requested_authn_context }}",
       "requestedAttributes":[
         {
           "FriendlyName": "eduPersonTargetedID",
