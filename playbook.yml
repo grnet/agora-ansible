@@ -38,6 +38,8 @@
       sudo_user: "{{ agora_user }}"
     - name: Start Agora cap_net_bind_service
       service: name=agora state=started
+    - name: Insert Google Analytis Tracking ID
+      lineinfile: dest={{ agora_home }}/public/index.html regexp="^(.*ga\('create', ').*(', 'auto'\);.*)$" line="\1{{ ga_tracking_id }}\2" backrefs=yes
   handlers:
     - name: restart agora
       service: name=agora state=restarted
