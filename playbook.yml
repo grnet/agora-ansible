@@ -23,6 +23,24 @@
       sudo_user: "{{ agora_user }}"
       notify:
         - restart agora
+    - name: Install nvm
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+      git: repo=https://github.com/creationix/nvm.git dest=~/.nvm version={{ nvm_version }}
+    - name: Export NVM_DIR for the agora user
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+      lineinfile: >
+        dest=~/.profile
+        line="export NVM_DIR=/home/nodejs-prod/.nvm"
+    - name: Source nvm in ~/.profile for the agora user
+      sudo: yes
+      sudo_user: "{{ agora_user }}"
+      lineinfile: >
+        dest=~/.profile
+        line=". ~/.nvm/nvm.sh"
+    - name: Install node for the agora user
+      command: sudo -iu {{ agora_user }} nvm install {{ node_version }}
     - name: Install Agora upstart script
       template: src=templates/agora.conf.tpl dest=/etc/init/agora.conf
     - name: Deploy agora local configuration

@@ -5,7 +5,7 @@ author 'me'
 env NAME=Agora
 env LOG_FILE=/var/log/agora-production.log
 env USER={{ agora_user }}
-env NODE_BIN=/usr/bin/nodejs
+env NODE_BIN={{ node_bin }}
 env DIRECTORY={{ agora_home }}/backend
 env APP=app.js
 env NODE_ENV=production
