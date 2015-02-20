@@ -23,8 +23,6 @@
       sudo_user: "{{ agora_user }}"
       notify:
         - restart agora
-    - name: Allow node to bind to privileged ports
-      command: /sbin/setcap 'cap_net_bind_service=+ep' /usr/bin/nodejs
     - name: Install Agora upstart script
       template: src=templates/agora.conf.tpl dest=/etc/init/agora.conf
     - name: Deploy agora local configuration
