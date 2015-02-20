@@ -6,9 +6,9 @@ env NAME=Agora
 env LOG_FILE=/var/log/agora-production.log
 env USER={{ agora_user }}
 env NODE_BIN=/usr/bin/nodejs
-env PORT=443
 env DIRECTORY={{ agora_home }}/backend
 env APP=app.js
+env NODE_ENV=production
 
 start on runlevel [23]
 stop on shutdown

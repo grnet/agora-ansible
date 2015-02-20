@@ -6,12 +6,8 @@
     "pass" : "{{ mongo_pass }}"
   },
   "mongo_db": "{{ mongo_db }}",
-  "ssl_options": {
-  	"ssl_key": "ssl/server.key",
-  	"ssl_cert": "ssl/server.crt",
-  	"secureProtocol": "TLSv1_method"
-  },
   "passport": {
+    "sessions": false,
     "saml": {
       "path": "/api/login/saml/callback",
       "protocol": "https",
@@ -72,5 +68,7 @@
       ]
     }
   },
-  "nodejs_port": {{ agora_port }}
+  "nodejs_port": {{ agora_port }},
+  "nodejs_host": "{{ agora_host }}",
+  "jwt_token_secret": "{{ jwt_token_secret }}"
 }

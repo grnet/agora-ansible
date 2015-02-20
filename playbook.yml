@@ -3,6 +3,18 @@
   vars_files:
     - files/vars.yml
   tasks:
+    - name: Install nginx
+      apt: pkg=nginx state=installed
+    - name: Install certificates for https
+      copy: src={{ item }} dest=/etc/nginx/ mode=0600
+      with_fileglob:
+        - files/server*
+      notify:
+        - restart nginx
+    - name: Deploy nginx configuration for agora
+      template: src=templates/agora.vhost.tpl dest=/etc/nginx/sites-available/default
+      notify:
+        - restart nginx
     - name: Add nodejs user
       user: name={{ agora_user }} state=present
     - name: Clones the Agora repository
@@ -11,8 +23,6 @@
       sudo_user: "{{ agora_user }}"
       notify:
         - restart agora
-    - name: Allow node to bind to privileged ports
-      command: /sbin/setcap 'cap_net_bind_service=+ep' /usr/bin/nodejs
     - name: Install Agora upstart script
       template: src=templates/agora.conf.tpl dest=/etc/init/agora.conf
     - name: Deploy agora local configuration
@@ -21,7 +31,7 @@
       sudo_user: "{{ agora_user }}"
       notify: 
         - restart agora
-    - name: Install certificates for https
+    - name: Install certificates for agora
       copy: src={{ item }} dest={{ agora_home }}/backend/config/ssl/ owner={{ agora_user }} mode=0600
       with_fileglob:
         - files/server*
@@ -43,3 +53,5 @@
   handlers:
     - name: restart agora
       service: name=agora state=restarted
+    - name: restart nginx
+      service: name=nginx state=restarted
