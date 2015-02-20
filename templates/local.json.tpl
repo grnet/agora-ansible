@@ -69,6 +69,6 @@
     }
   },
   "nodejs_port": {{ agora_port }},
-  "nodejs_host": {{ agora_host }},
+  "nodejs_host": "{{ agora_host }}",
   "jwt_token_secret": "{{ jwt_token_secret }}"
 }
