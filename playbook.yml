@@ -18,7 +18,7 @@
     - name: Add nodejs user
       user: name={{ agora_user }} state=present
     - name: Clones the Agora repository
-      git: repo={{ agora_repo }} dest={{ agora_home }}
+      git: repo={{ agora_repo }} dest={{ agora_home }} force=yes
       sudo: yes
       sudo_user: "{{ agora_user }}"
       notify:
